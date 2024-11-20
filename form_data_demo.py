@@ -5,6 +5,8 @@ from jwt_utils import dump_form_data, get_base_api_client
 
 
 def main() -> None:
+    # Proof of concept, with info hard-coded for now.
+    # TODO: Get scopes / config / folder / document info via CLI.
     scopes = ["signature", "impersonation"]
     api_client = get_base_api_client(scopes, ds_config)
     account_id = api_client.account_id

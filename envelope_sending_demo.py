@@ -13,19 +13,20 @@ def create_envelope_definition() -> EnvelopeDefinition:
     )
 
     # Create template roles to connect signers to the template.
+    # TODO: Proper input of values, this is just hard-coded for demo.
     employee = TemplateRole(
-        email="zoetucker@library.ucla.edu",
-        name="Zoe Tucker",
+        email="akohler@library.ucla.edu",
+        name="Andy Kohler (Employee)",
         role_name="Employee",
     )
     supervisor = TemplateRole(
         email="akohler@library.ucla.edu",
-        name="Andy Kohler",
+        name="Andy Kohler (Supervisor)",
         role_name="Supervisor",
     )
     aul = TemplateRole(
-        email="joshuagomez@library.ucla.edu",
-        name="Joshua Gomez",
+        email="akohler@library.ucla.edu",
+        name="Andy Kohler (AUL)",
         role_name="AUL",
     )
 
@@ -40,7 +41,7 @@ def main() -> None:
     account_id = api_client.account_id
 
     try:
-        # Hard-coded for now, for POC
+        # Hard-coded for now, for proof of concept.
         envelope_definition = create_envelope_definition()
         envelopes_api = EnvelopesApi(api_client)
         results = envelopes_api.create_envelope(
@@ -49,10 +50,8 @@ def main() -> None:
         envelope_id = results.envelope_id
         print(f"{envelope_id=}")
 
-        # Test to Zoe, Andy, Josh 20241119
-        # envelope_id = "6dc9501f-bf85-494f-ba1e-e5c5b8ad5115"
-
     except ApiException as err:
+        # TODO: Proper handling, this is just QAD for now.
         print("")
         print(err)
         body = err.body.decode("utf8")

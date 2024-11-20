@@ -62,6 +62,7 @@ def get_base_api_client(scopes: list[str], config: dict) -> ApiClient:
 def dump_template_info(
     api_client: ApiClient, account_id: str, template: EnvelopeTemplate
 ) -> None:
+    """QAD method to print selected data from a template during development."""
     template_id = template.template_id
     print(f"{template.name} ({template_id})")
     recipients = api_client.list_recipients(account_id, template_id)
@@ -83,11 +84,12 @@ def dump_template_info(
 
 
 def dump_form_data(envelope_form_data: EnvelopeFormData) -> None:
+    """QAD method to print selected data from a template during development."""
     # Ignore recipient_form_data (a list, each element including its own form_data)
     # for now.
     # form_data is a list of FormDataItem
     form_data = envelope_form_data.form_data
     for item in form_data:
-        print(item.name)
-        print(item.value)
+        print(f"\t{item.name=}")
+        print(f"\t{item.value=}")
         print("")

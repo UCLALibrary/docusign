@@ -1,1 +1,2 @@
 docusign-esign == 4.0.0
+jira == 3.8.0

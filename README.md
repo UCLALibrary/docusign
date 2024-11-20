@@ -30,3 +30,13 @@ If needed, rebuild the dev container by:
    1. `docker images | grep vsc-docusign` # vsc-docusign-LONG_HEX_STRING-uid
    2. `docker image rm -f vsc-docusign-LONG_HEX_STRING-uid`
 3. Start VS Code as usual.
+
+## Running code
+
+Running code from a VS Code terminal within the dev container should just work, e.g.: `python form_data_demo.py` (or whatever the specific program is).
+
+Otherwise, run a program via docker compose.  From the project directory:
+
+`docker compose run python python form_data_demo.py`
+
+This starts up a container for the `python` service via `docker compose`, runs the given program, then shuts down the container.

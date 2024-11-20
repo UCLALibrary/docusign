@@ -164,3 +164,8 @@ cython_debug/
 # Local secrets and passwords
 *password*
 *secret*
+
+# Various data files
+*.json
+*.txt
+*.zip

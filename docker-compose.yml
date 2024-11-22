@@ -1,0 +1,7 @@
+services:
+  python:
+    container_name: docusign
+    build: 
+      context: .
+    volumes:
+      - .:/home/docusign/app

@@ -1,7 +1,25 @@
 from argparse import ArgumentParser
-from docusign_esign import EnvelopesApi, FoldersApi, FolderItemV2
+from pprint import pprint  # for pretty output during development
+from docusign_esign import (
+    EnvelopesApi,
+    EnvelopeFormData,
+    FoldersApi,
+    FolderItemV2,
+    FormDataItem,
+)
 from docusign_esign.client.api_exception import ApiException
-from jwt_utils import dump_form_data, get_base_api_client, get_config
+from jwt_utils import get_base_api_client, get_config
+
+
+def get_form_data_from_envelope(envelope_form_data: EnvelopeFormData) -> dict:
+    """Returns form data from the given envelope."""
+    # Ignore recipient_form_data (a list, each element including its own form_data)
+    # for now.
+    parsed_data = {}
+    form_data_item: FormDataItem  # for type hints
+    for form_data_item in envelope_form_data.form_data:
+        parsed_data[form_data_item.name] = form_data_item.value
+    return parsed_data
 
 
 def main() -> None:
@@ -29,11 +47,17 @@ def main() -> None:
         ]
 
         envelopes_api = EnvelopesApi(api_client)
+        # Collect information we want.
+        parsed_form_data = []
         doc: FolderItemV2  # for type hints
         for doc in docs:
             print(f"{doc.subject} ({doc.status} {doc.last_modified_date_time})")
-            form_data = envelopes_api.get_form_data(account_id, doc.envelope_id)
-            dump_form_data(form_data)
+            form_data: EnvelopeFormData = envelopes_api.get_form_data(
+                account_id, doc.envelope_id
+            )
+            parsed_form_data.append(get_form_data_from_envelope(form_data))
+        # For now, just dump data for review.
+        pprint(parsed_form_data, width=132)
 
     except ApiException as err:
         # TODO: Proper handling, this is just QAD for now.

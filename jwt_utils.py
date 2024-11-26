@@ -1,3 +1,4 @@
+import tomllib
 from docusign_esign import (
     Account,
     ApiClient,
@@ -8,25 +9,18 @@ from docusign_esign import (
 from docusign_esign.client.auth.oauth import OAuthUserInfo
 
 
-def get_private_key(private_key_path: str) -> str:
-    """Returns contents of the private key file
-    at private_key_path.
-    """
-    with open(private_key_path) as f:
-        private_key = f.read()
-    # Original code, re-encode as utf-8...
-    # return private_key.encode("ascii").decode("utf-8")
-    # But... the file is already base64, which is ASCII...
-    return private_key
+def get_config(config_file_name: str) -> dict:
+    with open(config_file_name, "rb") as f:
+        config = tomllib.load(f)
+    return config
 
 
 def get_base_api_client(scopes: list[str], config: dict) -> ApiClient:
     """Returns a generic Docusign API client, ready for basic use."""
-    private_key = get_private_key(config["private_key_file"])
     api_client = ApiClient()
     api_client.set_base_path(config["authorization_server"])
     api_client.set_oauth_host_name(config["authorization_server"])
-
+    private_key = config["private_key"]
     oauth_token: OAuthToken = api_client.request_jwt_user_token(
         client_id=config["client_id"],
         user_id=config["impersonated_user_id"],

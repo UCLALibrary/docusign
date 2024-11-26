@@ -2,7 +2,6 @@ import tomllib
 from docusign_esign import (
     Account,
     ApiClient,
-    EnvelopeFormData,
     EnvelopeTemplate,
     OAuthToken,
 )
@@ -75,15 +74,3 @@ def dump_template_info(
                     print(f"\t\t\t\t{tab_data.tab_label=}")
                     print(f"\t\t\t\t{tab_data.tooltip=}")
                     print("")
-
-
-def dump_form_data(envelope_form_data: EnvelopeFormData) -> None:
-    """QAD method to print selected data from a template during development."""
-    # Ignore recipient_form_data (a list, each element including its own form_data)
-    # for now.
-    # form_data is a list of FormDataItem
-    form_data = envelope_form_data.form_data
-    for item in form_data:
-        print(f"\t{item.name=}")
-        print(f"\t{item.value=}")
-        print("")

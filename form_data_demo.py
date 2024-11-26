@@ -1,14 +1,19 @@
+from argparse import ArgumentParser
 from docusign_esign import EnvelopesApi, FoldersApi, FolderItemV2
 from docusign_esign.client.api_exception import ApiException
-from jwt_secrets import DOCUSIGN_CONFIG as ds_config
-from jwt_utils import dump_form_data, get_base_api_client
+from jwt_utils import dump_form_data, get_base_api_client, get_config
 
 
 def main() -> None:
-    # Proof of concept, with info hard-coded for now.
-    # TODO: Get scopes / config / folder / document info via CLI.
+    # Proof of concept, with some info hard-coded for now.
+    # TODO: Get folder / document info via CLI.
+    parser = ArgumentParser()
+    parser.add_argument("--config", help="Configuration file to use", required=True)
+    args = parser.parse_args()
+    config = get_config(args.config)
+
     scopes = ["signature", "impersonation"]
-    api_client = get_base_api_client(scopes, ds_config)
+    api_client = get_base_api_client(scopes, config)
     account_id = api_client.account_id
 
     try:

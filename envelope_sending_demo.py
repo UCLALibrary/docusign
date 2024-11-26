@@ -1,7 +1,7 @@
+from argparse import ArgumentParser
 from docusign_esign import EnvelopesApi, EnvelopeDefinition, TemplateRole
 from docusign_esign.client.api_exception import ApiException
-from jwt_secrets import DOCUSIGN_CONFIG as ds_config
-from jwt_utils import get_base_api_client
+from jwt_utils import get_base_api_client, get_config
 
 
 def create_envelope_definition() -> EnvelopeDefinition:
@@ -36,8 +36,14 @@ def create_envelope_definition() -> EnvelopeDefinition:
 
 
 def main() -> None:
+    # Proof of concept, with some info hard-coded for now.
+    parser = ArgumentParser()
+    parser.add_argument("--config", help="Configuration file to use", required=True)
+    args = parser.parse_args()
+    config = get_config(args.config)
+
     scopes = ["signature", "impersonation"]
-    api_client = get_base_api_client(scopes, ds_config)
+    api_client = get_base_api_client(scopes, config)
     account_id = api_client.account_id
 
     try:

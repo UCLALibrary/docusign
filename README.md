@@ -33,10 +33,27 @@ If needed, rebuild the dev container by:
 
 ## Running code
 
-Running code from a VS Code terminal within the dev container should just work, e.g.: `python form_data_demo.py` (or whatever the specific program is).
+Running code from a VS Code terminal within the dev container should just work, e.g.: `python get_form_data.py` (or whatever the specific program is).
 
 Otherwise, run a program via docker compose.  From the project directory:
 
-`docker compose run python python form_data_demo.py`
+`docker compose run python python get_form_data.py`
 
 This starts up a container for the `python` service via `docker compose`, runs the given program, then shuts down the container.
+
+### Secrets and other configuration
+
+Docusign and Jira require various secrets, like API tokens, as well as configuration details, like server URLs.
+
+Store this configration in a TOML file, named appropriately for each project or environment (details TBD...).  Ask a team member
+for the appropriate configuration file and place it in the top-level directory of the project (same directory as `Dockerfile`).
+
+The configuration file must be specified on the command line when running each program:
+
+`python get_form_data.py --config NAME_OF_FILE`
+
+Currently, the configuration file contains the following (see comments in file for documentation):
+* `authorization_server`
+* `client_id`
+* `impersonated_user_id`
+* `private_key`

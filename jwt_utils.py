@@ -52,6 +52,19 @@ def get_base_api_client(scopes: list[str], config: dict) -> ApiClient:
     return api_client
 
 
+def get_consent_url(scopes: list[str], config: dict):
+    # Adapted from https://github.com/docusign/code-examples-python/blob/master/jwt_console.py
+    url_scopes = "+".join(scopes)
+    # This redirect_uri must also be added to the application in Docusign.
+    redirect_uri = "https://developers.docusign.com/platform/auth/consent"
+    # Construct consent URL
+    consent_url = (
+        f"https://{config['authorization_server']}/oauth/auth?response_type=code&"
+        f"scope={url_scopes}&client_id={config['client_id']}&redirect_uri={redirect_uri}"
+    )
+    return consent_url
+
+
 def dump_template_info(
     api_client: ApiClient, account_id: str, template: EnvelopeTemplate
 ) -> None:

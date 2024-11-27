@@ -8,7 +8,7 @@ from docusign_esign import (
     FormDataItem,
 )
 from docusign_esign.client.api_exception import ApiException
-from jwt_utils import get_base_api_client, get_config
+from jwt_utils import get_base_api_client, get_config, get_consent_url
 
 
 def get_form_data_from_envelope(envelope_form_data: EnvelopeFormData) -> dict:
@@ -30,11 +30,11 @@ def main() -> None:
     args = parser.parse_args()
     config = get_config(args.config)
 
-    scopes = ["signature", "impersonation"]
-    api_client = get_base_api_client(scopes, config)
-    account_id = api_client.account_id
-
     try:
+        scopes = ["signature", "impersonation"]
+        api_client = get_base_api_client(scopes, config)
+        account_id = api_client.account_id
+
         folders_api = FoldersApi(api_client)
         # folders = folders_api.list(account_id)
         # Could also limit this by date and sender, but not subject.
@@ -65,6 +65,17 @@ def main() -> None:
         print(err)
         body = err.body.decode("utf8")
         print(body)
+        print("")
+        print("Checking for consent....")
+        # Each application needs to get "consent" from the impersonated user.
+        # This appears to be needed only one, on the first run.
+        # TODO: This, better...
+        if "consent_required" in body:
+            consent_url = get_consent_url(scopes, config)
+            print(
+                "Open the following URL in your browser to grant consent to the application:"
+            )
+            print(consent_url)
 
 
 if __name__ == "__main__":

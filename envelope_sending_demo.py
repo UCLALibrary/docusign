@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from docusign_esign import EnvelopesApi, EnvelopeDefinition, TemplateRole
 from docusign_esign.client.api_exception import ApiException
-from jwt_utils import get_base_api_client, get_config
+from jwt_utils import get_base_api_client, get_config, get_consent_url
 
 
 def create_envelope_definition() -> EnvelopeDefinition:
@@ -62,6 +62,17 @@ def main() -> None:
         print(err)
         body = err.body.decode("utf8")
         print(body)
+        print("")
+        print("Checking for consent....")
+        # Each application needs to get "consent" from the impersonated user.
+        # This appears to be needed only one, on the first run.
+        # TODO: This, better...
+        if "consent_required" in body:
+            consent_url = get_consent_url(scopes, config)
+            print(
+                "Open the following URL in your browser to grant consent to the application:"
+            )
+            print(consent_url)
 
 
 if __name__ == "__main__":

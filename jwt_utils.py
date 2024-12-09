@@ -6,12 +6,24 @@ from docusign_esign import (
     OAuthToken,
 )
 from docusign_esign.client.auth.oauth import OAuthUserInfo
+from jira import JIRA
 
 
 def get_config(config_file_name: str) -> dict:
     with open(config_file_name, "rb") as f:
         config = tomllib.load(f)
     return config
+
+
+def get_jira_api_client(config: dict) -> JIRA:
+    """Returns a Jira API client."""
+    jira_api_client = JIRA(
+        server=config["auth_server"],
+        # client_username must be an email
+        basic_auth=(config["username"], config["key"]),
+    )
+
+    return jira_api_client
 
 
 def get_base_api_client(scopes: list[str], config: dict) -> ApiClient:

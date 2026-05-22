@@ -1,3 +1,5 @@
+This was an experimental project, not used in production.  Repository archived 2026-05-21 akohler.
+
 # Docusign and Jira Tools
 UCLA Library tools for working with Docusign and Jira
 
